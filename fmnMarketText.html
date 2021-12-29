@@ -1,13 +1,16 @@
 <html lang="ko">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
 
 	<body>
+        <label for="maximum">상점구매한도</label>
+        <input type="number" id="maximum" value="6">
 		<button id="btnPopup" class="btn btn-primary">스탯보기</button>
 		<button id="btnStat" class="btn btn-primary">능력치탭 바로가기</button>
 		<table class="table table-dark table-striped table-hover table-bordered">
@@ -138,7 +141,8 @@
 					</td>
 					<td colspan="2">
 						<label style="font-weight: bold;">분배내용 입력 : </label>
-						<input type="text" id="fusionDivisionText" style="width:300px;" disabled>
+                        <input type="text" id="inputText" disabled>
+						<input type="text" id="fusionDivisionText" style="width:500px;" disabled>
 					</td>
 				</tr>
 				<tr>
@@ -153,6 +157,72 @@
 	<script type="text/javascript">
 		var endorphinCount = 0;
 		var setpieceCount  = 0;
+        var minus = false;
+        var availableTags = [
+                            "개인기",
+                            "골 결정력",
+                            "드리블",
+                            "일대일마크",
+                            "장거리스로인",
+                            "중거리슛",
+                            "코너킥",
+                            "크로스",
+                            "태클",
+                            "패스",
+                            "퍼스트터치",
+                            "페널티킥",
+                            "프리킥",
+                            "헤더",
+                            "대담성",
+                            "리더십",
+                            "승부욕",
+                            "시야",
+                            "에측력",
+                            "오프 더 볼",
+                            "위치선정",
+                            "적극성",
+                            "집중력",
+                            "천재성",
+                            "침착성",
+                            "팀워크",
+                            "판단력",
+                            "활동량",
+                            "가속도",
+                            "균형감각",
+                            "몸싸움",
+                            "민첩성",
+                            "점프 거리",
+                            "주력",
+                            "지구력",
+                            "타고난 체력"
+                        ];
+
+        $( "#inputText" ).autocomplete({
+            source: availableTags
+        });
+
+        $( "#inputText" ).on("keyup", function(e) {
+            if(e.keyCode == 13) {
+                console.log($("#inputText").val() != "");
+                if($("#inputText").val() != null && $("#inputText").val() != "") {
+                    if(minus) {
+                        $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
+                        minus = false;
+                    } else if(!minus) {
+                        $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
+                        minus = true;
+                    }
+                } else {
+                    var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
+                    
+                    $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
+                }
+                $("#inputText").val("");
+            }
+        });
+
+
+
 
 		$("#tutoring").on("click", function() {
 			if($("#tutoring").is(":checked")){
@@ -217,27 +287,39 @@
 		$("#fusionDivision").on("click", function() {
 			if($("#fusionDivision").is(":checked")){
 				$("#fusionDivisionCnt").prop("disabled", false);
-				$("#fusionDivisionText").prop("disabled", false);
+                $("#inputText").prop("disabled", false);
+				$("#fusionDivisionText").prop("readonly", false);
 			} else {
 				$("#fusionDivisionCnt").prop("disabled", true);
+                $("#inputText").prop("disabled", true);
 				$("#fusionDivisionText").prop("disabled", true);
 			}
 		});
 		
 		$("#endorphinAdd").on("click", function() {
+			endorphinCount += Number($("#endorphinCnt").val());
+            if(!storeBuyCountCheck()) {
+                endorphinCount -= Number($("#endorphinCnt").val());
+                return false;
+            }
+
 			var endorphinText = $("#endorphinText").val() + " ";
 			endorphinText += $("#endorphinItem").val() + "+" + $("#endorphinCnt").val();
 			$("#endorphinText").val(endorphinText);
-			endorphinCount += Number($("#endorphinCnt").val());
 					
 			resultSetting();
 		});
 
 		$("#setpieceAdd").on("click", function() {
+            setpieceCount += Number($("#setpieceCnt").val());
+            if(!storeBuyCountCheck()) {
+                setpieceCount -= Number($("#setpieceCnt").val());
+                return false;
+            }
+
 			var setpieceText = $("#setpieceText").val() + " ";
 			setpieceText += $("#setpieceItem").val() + "+" + $("#setpieceCnt").val();
 			$("#setpieceText").val(setpieceText);
-			setpieceCount += Number($("#setpieceCnt").val());
 					
 			resultSetting();
 		});
@@ -255,18 +337,24 @@
 		});
 
 		$("#tutorItem").change(function(){
+            if(!storeBuyCountCheck()) {
+                return false;
+            }
 			resultSetting();
-			storeBuyCountCheck();
 		});
 
 		$("select").on("change, focusout, focuson", function() {
+            if(!storeBuyCountCheck()) {
+                return false;
+            }
 			resultSetting();
-			storeBuyCountCheck();
 		});
 		
 		$("input").on("change, keyup", function() {
+            if(!storeBuyCountCheck()) {
+                return false;
+            }
 			resultSetting();
-			storeBuyCountCheck();
 		});
 		
 		$("#btnPopup").on("click", function() {
@@ -341,7 +429,7 @@
 		
 		function storeBuyCountCheck() {
 		
-		console.log(endorphinCount);
+            var countCheck = true;
 			var totalBuyCount = 0;
 			
 			if($("#steroid").is(":checked")) {
@@ -368,10 +456,13 @@
 			if($("#fusionDivision").is(":checked")) {
 				totalBuyCount += Number($("#fusionDivisionCnt").val());
 			}
-			
-			if(totalBuyCount > 7) {
-				$("#result").text("상점을 너무 많이해서 초기화 시켰음. 갯수 조절 다시 해보세요.\n상점은 총 7개 구매가 가능합니다.");
+
+			if(totalBuyCount > $("#maximum").val()) {
+				$("#result").text("상점을 너무 많이해서 초기화 시켰음. 갯수 조절 다시 해보세요.\n상점은 총 6개 구매가 가능합니다.");
+                countCheck = false;
 			}
+
+            return countCheck;
 		}
 		
 		function winPop(url, opts) {
