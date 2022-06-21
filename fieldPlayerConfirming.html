@@ -45,8 +45,7 @@
 			
             //openFile will read XML file and input it into text field
             var openFile = function(event, type) {
-                console.log(event);
-				if(type == "bf") {
+                if(type == "bf") {
 					reset();
 				}
                 var input = event.target;
@@ -78,8 +77,7 @@
             };
 
             function fnSetStatus(player, type) {
-                console.log(player);
-				var mental = player.MentalAttributes;
+                var mental = player.MentalAttributes;
 				var physical = player.PhysicalAttributes;
 				var technical = player.TechnicalAttributes;
 				var currentAbility = player.CA;
