@@ -45,6 +45,7 @@
 			
             //openFile will read XML file and input it into text field
             var openFile = function(event, type) {
+                console.log(event);
 				if(type == "bf") {
 					reset();
 				}
@@ -65,176 +66,135 @@
             //this will parse XML file and output it to website
             var parseFile = function(text, type) {
 				
-                var xmlDoc = $.parseXML(text),
-                    $xml = $(xmlDoc),
-                    $options = $xml.find("option");
+                let data = JSON.parse(text);
                 
 				if(type == "bf") {
-					bfPlayer = xmlToJson(xmlDoc).xml.Player;
-					fnSetStatus(bfPlayer, type);
-                    console.log(bfPlayer);
+				 	bfPlayer = data;
+				 	fnSetStatus(bfPlayer, type);
 				} else if (type == "af") {
-					afPlayer = xmlToJson(xmlDoc).xml.Player;
+					afPlayer = data;
 					fnSetStatus(afPlayer, type);
-                    console.log(afPlayer);
 				}
             };
 
-            function xmlToJson(xml) {
-	
-                // Create the return object
-                var obj = {};
-
-                if (xml.nodeType == 1) { // element
-                    // do attributes
-                    if (xml.attributes.length > 0) {
-                    obj["@attributes"] = {};
-                        for (var j = 0; j < xml.attributes.length; j++) {
-                            var attribute = xml.attributes.item(j);
-                            obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-                        }
-                    }
-                } else if (xml.nodeType == 3) { // text
-                    obj = xml.nodeValue;
-                }
-
-                // do children
-                if (xml.hasChildNodes()) {
-                    for(var i = 0; i < xml.childNodes.length; i++) {
-                        var item = xml.childNodes.item(i);
-                        var nodeName = item.nodeName;
-                        if (typeof(obj[nodeName]) == "undefined") {
-                            obj[nodeName] = xmlToJson(item);
-                        } else {
-                            if (typeof(obj[nodeName].push) == "undefined") {
-                                var old = obj[nodeName];
-                                obj[nodeName] = [];
-                                obj[nodeName].push(old);
-                            }
-                            obj[nodeName].push(xmlToJson(item));
-                        }
-                    }
-                }
-                return obj;
-            };	
-			
-			function fnSetStatus(player, type) {
-				var mental = player.Attributes.MentalAttributes;
-				var physical = player.Attributes.PhysicalAttributes;
-				var technical = player.Attributes.TechnicalAttributes;
-				var currentAbility = player.General.CA['@attributes'].Value;
-				var hidden = player.Attributes.HiddenAttributes;
-				var personality = player.Attributes.PersonalityAttributes;
+            function fnSetStatus(player, type) {
+                console.log(player);
+				var mental = player.MentalAttributes;
+				var physical = player.PhysicalAttributes;
+				var technical = player.TechnicalAttributes;
+				var currentAbility = player.CA;
+				var hidden = player.HiddenAttributes;
+				var personality = player.PersonalityAttributes;
 				var Position = "";
 				var PositionCount = 0;
 								
 				if(type == "bf") {
-					$("#Consistency").val(hidden.Consistency['@attributes'].Value);
-					$("#Dirtiness").val(hidden.Dirtiness['@attributes'].Value);
-					$("#ImportantMatches").val(hidden.ImportantMatches['@attributes'].Value);
-					$("#InjuryProness").val(hidden.InjuryProness['@attributes'].Value);
-					$("#Versatility").val(hidden.Versatility['@attributes'].Value);
+					$("#Consistency").val(hidden.Consistency);
+					$("#Dirtiness").val(hidden.Dirtiness);
+					$("#ImportantMatches").val(hidden.ImportantMatches);
+					$("#InjuryProness").val(hidden.InjuryProness);
+					$("#Versatility").val(hidden.Versatility);
 					
-					$("#Adaptability").val(personality.Adaptability['@attributes'].Value);
-					$("#Ambition").val(personality.Ambition['@attributes'].Value);
-					$("#Controversy").val(personality.Controversy['@attributes'].Value);
-					$("#Loyalty").val(personality.Loyalty['@attributes'].Value);
-					$("#Pressure").val(personality.Pressure['@attributes'].Value);
-					$("#Professional").val(personality.Professional['@attributes'].Value);
-					$("#Sportsmanship").val(personality.Sportsmanship['@attributes'].Value);
-					$("#Temperament").val(personality.Temperament['@attributes'].Value);
+					$("#Adaptability").val(personality.Adaptability);
+					$("#Ambition").val(personality.Ambition);
+					$("#Controversy").val(personality.Controversy);
+					$("#Loyalty").val(personality.Loyalty);
+					$("#Pressure").val(personality.Pressure);
+					$("#Professional").val(personality.Professional);
+					$("#Sportsmanship").val(personality.Sportsmanship);
+					$("#Temperament").val(personality.Temperament);
 					
 					$("#CA").val(currentAbility);
 					
-					if(player.Positions.AttackingMidCentral['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidCentral > 15) {
 						Position += "AMC";
 						PositionCount++;
 					}
-					if(player.Positions.AttackingMidLeft['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "AML	";
 						PositionCount++;
 					}
-					if(player.Positions.AttackingMidRight['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "AMR";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderCentral['@attributes'].Value > 15) {
+					if(player.Positions.DefenderCentral > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DC";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderLeft['@attributes'].Value > 15) {
+					if(player.Positions.DefenderLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DL";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderRight['@attributes'].Value > 15) {
+					if(player.Positions.DefenderRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DR";
 						PositionCount++;
 					}
-					if(player.Positions.DefensiveMidfielder['@attributes'].Value > 15) {
+					if(player.Positions.DefensiveMidfielder > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DM";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderCentral['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderCentral > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "MC";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderLeft['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "ML";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderRight['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "MR";
 						PositionCount++;
 					}
-					if(player.Positions.WingBackLeft['@attributes'].Value > 15) {
+					if(player.Positions.WingBackLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "WBL";
 						PositionCount++;
 					}
-					if(player.Positions.WingBackRight['@attributes'].Value > 15) {
+					if(player.Positions.WingBackRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "WBR";
 						PositionCount++;
 					}
-					if(player.Positions.Striker['@attributes'].Value > 15) {
+					if(player.Positions.Striker > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "ST";
 						PositionCount++;
 					}
-					if(player.Positions.Goalkeeper['@attributes'].Value > 15) {
+					if(player.Positions.Goalkeeper > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
@@ -246,159 +206,161 @@
 					bfPositions = $("#Position").val().split(",");
 									
 					// 멘탈
-					$("#Aggression").val(mental.Aggression['@attributes'].Value);
-					$("#Anticipation").val(mental.Anticipation['@attributes'].Value);
-					$("#Bravery").val(mental.Bravery['@attributes'].Value);
-					$("#Composure").val(mental.Composure['@attributes'].Value);
-					$("#Concentration").val(mental.Concentration['@attributes'].Value);
-					$("#Decisions").val(mental.Decisions['@attributes'].Value);
-					$("#Determination").val(mental.Determination['@attributes'].Value);
-					$("#Flair").val(mental.Flair['@attributes'].Value);
-					$("#Leadership").val(mental.Leadership['@attributes'].Value);
-					$("#OffTheBall").val(mental.OffTheBall['@attributes'].Value);
-					$("#Positioning").val(mental.Positioning['@attributes'].Value);
-					$("#Teamwork").val(mental.Teamwork['@attributes'].Value);
-					$("#Vision").val(mental.Vision['@attributes'].Value);
-					$("#Workrate").val(mental.Workrate['@attributes'].Value);
+					$("#Aggression").val(mental.Aggression);
+					$("#Anticipation").val(mental.Anticipation);
+					$("#Bravery").val(mental.Bravery);
+					$("#Composure").val(mental.Composure);
+					$("#Concentration").val(mental.Concentration);
+					$("#Decisions").val(mental.Decisions);
+					$("#Determination").val(mental.Determination);
+					$("#Flair").val(mental.Flair);
+					$("#Leadership").val(mental.Leadership);
+					$("#OffTheBall").val(mental.OffTheBall);
+					$("#Positioning").val(mental.Positioning);
+					$("#Teamwork").val(mental.Teamwork);
+					$("#Vision").val(mental.Vision);
+					$("#Workrate").val(mental.Workrate);
 					
 					// 기술
-					$("#Corners").val(technical.Corners['@attributes'].Value);
-					$("#Crossing").val(technical.Crossing['@attributes'].Value);
-					$("#Dribbling").val(technical.Dribbling['@attributes'].Value);
-					$("#Finishing").val(technical.Finishing['@attributes'].Value);
-					$("#FirstTouch").val(technical.FirstTouch['@attributes'].Value);
-					$("#Freekicks").val(technical.Freekicks['@attributes'].Value);
-					$("#Heading").val(technical.Heading['@attributes'].Value);
-					$("#LongShots").val(technical.LongShots['@attributes'].Value);
-					$("#Longthrows").val(technical.Longthrows['@attributes'].Value);
-					$("#Marking").val(technical.Marking['@attributes'].Value);
-					$("#Passing").val(technical.Passing['@attributes'].Value);
-					$("#PenaltyTaking").val(technical.PenaltyTaking['@attributes'].Value);
-					$("#Tackling").val(technical.Tackling['@attributes'].Value);
-					$("#Technique").val(technical.Technique['@attributes'].Value);
+					$("#Corners").val(technical.Corners);
+					$("#Crossing").val(technical.Crossing);
+					$("#Dribbling").val(technical.Dribbling);
+					$("#Finishing").val(technical.Finishing);
+					$("#FirstTouch").val(technical.FirstTouch);
+					$("#Freekicks").val(technical.Freekicks);
+					$("#Heading").val(technical.Heading);
+					$("#LongShots").val(technical.LongShots);
+					$("#Longthrows").val(technical.Longthrows);
+					$("#Marking").val(technical.Marking);
+					$("#Passing").val(technical.Passing);
+					$("#PenaltyTaking").val(technical.PenaltyTaking);
+					$("#Tackling").val(technical.Tackling);
+					$("#Technique").val(technical.Technique);
 					
 					// 피지컬
-					$("#Acceleration").val(physical.Acceleration['@attributes'].Value);
-					$("#Agility").val(physical.Agility['@attributes'].Value);
-					$("#Balance").val(physical.Balance['@attributes'].Value);
-					$("#Jumping").val(physical.Jumping['@attributes'].Value);
-					$("#LeftFoot").val(physical.LeftFoot['@attributes'].Value);
-					$("#NaturalFitness").val(physical.NaturalFitness['@attributes'].Value);
-					$("#Pace").val(physical.Pace['@attributes'].Value);
-					$("#RightFoot").val(physical.RightFoot['@attributes'].Value);
-					$("#Stamina").val(physical.Stamina['@attributes'].Value);
-					$("#Strength").val(physical.Strength['@attributes'].Value);
+					$("#Acceleration").val(physical.Acceleration);
+					$("#Agility").val(physical.Agility);
+					$("#Balance").val(physical.Balance);
+					$("#Jumping").val(physical.Jumping);
+					$("#LeftFoot").val(physical.LeftFoot);
+					$("#NaturalFitness").val(physical.NaturalFitness);
+					$("#Pace").val(physical.Pace);
+					$("#RightFoot").val(physical.RightFoot);
+					$("#Stamina").val(physical.Stamina);
+					$("#Strength").val(physical.Strength);
 				} else {
-					if(bfPlayer.Attributes.HiddenAttributes.Consistency['@attributes'].Value != afPlayer.Attributes.HiddenAttributes.Consistency['@attributes'].Value) {
-						$("#Consistency").val($("#Consistency").val() + " -> " + hidden.Consistency['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.HiddenAttributes.Consistency['@attributes'].Value) > Number(afPlayer.Attributes.HiddenAttributes.Consistency['@attributes'].Value)) {
+					if(bfPlayer.HiddenAttributes.Consistency != afPlayer.HiddenAttributes.Consistency) {
+						$("#Consistency").val($("#Consistency").val() + " -> " + hidden.Consistency);
+						if(Number(bfPlayer.HiddenAttributes.Consistency) > Number(afPlayer.HiddenAttributes.Consistency)) {
 							$("#Consistency").addClass("minus-big");
 						} else {
 							$("#Consistency").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.HiddenAttributes.Dirtiness['@attributes'].Value != afPlayer.Attributes.HiddenAttributes.Dirtiness['@attributes'].Value) {
-						$("#Dirtiness").val($("#Dirtiness").val() + " -> " + hidden.Dirtiness['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.HiddenAttributes.Dirtiness['@attributes'].Value) > Number(afPlayer.Attributes.HiddenAttributes.Dirtiness['@attributes'].Value)) {
+					if(bfPlayer.HiddenAttributes.Dirtiness != afPlayer.HiddenAttributes.Dirtiness) {
+						$("#Dirtiness").val($("#Dirtiness").val() + " -> " + hidden.Dirtiness);
+						if(Number(bfPlayer.HiddenAttributes.Dirtiness) > Number(afPlayer.HiddenAttributes.Dirtiness)) {
 							$("#Dirtiness").addClass("minus-big");
 						} else {
 							$("#Dirtiness").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.HiddenAttributes.ImportantMatches['@attributes'].Value != afPlayer.Attributes.HiddenAttributes.ImportantMatches['@attributes'].Value) {
-						$("#ImportantMatches").val($("#ImportantMatches").val() + " -> " + hidden.ImportantMatches['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.HiddenAttributes.ImportantMatches['@attributes'].Value) > Number(afPlayer.Attributes.HiddenAttributes.ImportantMatches['@attributes'].Value)) {
+					if(bfPlayer.HiddenAttributes.ImportantMatches != afPlayer.HiddenAttributes.ImportantMatches) {
+						$("#ImportantMatches").val($("#ImportantMatches").val() + " -> " + hidden.ImportantMatches);
+						if(Number(bfPlayer.HiddenAttributes.ImportantMatches) > Number(afPlayer.HiddenAttributes.ImportantMatches)) {
 							$("#ImportantMatches").addClass("minus-big");
 						} else {
 							$("#ImportantMatches").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.HiddenAttributes.InjuryProness['@attributes'].Value != afPlayer.Attributes.HiddenAttributes.InjuryProness['@attributes'].Value) {
-						$("#InjuryProness").val($("#InjuryProness").val() + " -> " + hidden.InjuryProness['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.HiddenAttributes.InjuryProness['@attributes'].Value) > Number(afPlayer.Attributes.HiddenAttributes.InjuryProness['@attributes'].Value)) {
+					if(bfPlayer.HiddenAttributes.InjuryProness != afPlayer.HiddenAttributes.InjuryProness) {
+						$("#InjuryProness").val($("#InjuryProness").val() + " -> " + hidden.InjuryProness);
+						if(Number(bfPlayer.HiddenAttributes.InjuryProness) > Number(afPlayer.HiddenAttributes.InjuryProness)) {
 							$("#InjuryProness").addClass("minus-big");
 						} else {
 							$("#InjuryProness").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.HiddenAttributes.Versatility['@attributes'].Value != afPlayer.Attributes.HiddenAttributes.Versatility['@attributes'].Value) {
-						$("#Versatility").val($("#Versatility").val() + " -> " + hidden.Versatility['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.HiddenAttributes.Versatility['@attributes'].Value) > Number(afPlayer.Attributes.HiddenAttributes.Versatility['@attributes'].Value)) {
+					if(bfPlayer.HiddenAttributes.Versatility != afPlayer.HiddenAttributes.Versatility) {
+						$("#Versatility").val($("#Versatility").val() + " -> " + hidden.Versatility);
+						if(Number(bfPlayer.HiddenAttributes.Versatility) > Number(afPlayer.HiddenAttributes.Versatility)) {
 							$("#Versatility").addClass("minus-big");
 						} else {
 							$("#Versatility").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Adaptability['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Adaptability['@attributes'].Value) {
-						$("#Adaptability").val($("#Adaptability").val() + " -> " + personality.Adaptability['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Adaptability['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Adaptability['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Adaptability != afPlayer.PersonalityAttributes.Adaptability) {
+						$("#Adaptability").val($("#Adaptability").val() + " -> " + personality.Adaptability);
+						if(Number(bfPlayer.PersonalityAttributes.Adaptability) > Number(afPlayer.PersonalityAttributes.Adaptability)) {
 							$("#Adaptability").addClass("minus-big");
 						} else {
 							$("#Adaptability").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Ambition['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Ambition['@attributes'].Value) {
-						$("#Ambition").val($("#Ambition").val() + " -> " + personality.Ambition['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Ambition['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Ambition['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Ambition != afPlayer.PersonalityAttributes.Ambition) {
+						$("#Ambition").val($("#Ambition").val() + " -> " + personality.Ambition);
+						if(Number(bfPlayer.PersonalityAttributes.Ambition) > Number(afPlayer.PersonalityAttributes.Ambition)) {
 							$("#Ambition").addClass("minus-big");
 						} else {
 							$("#Ambition").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Controversy['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Controversy['@attributes'].Value) {
-						$("#Controversy").val($("#Controversy").val() + " -> " + personality.Controversy['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Controversy['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Controversy['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Controversy != afPlayer.PersonalityAttributes.Controversy) {
+						$("#Controversy").val($("#Controversy").val() + " -> " + personality.Controversy);
+						if(Number(bfPlayer.PersonalityAttributes.Controversy) > Number(afPlayer.PersonalityAttributes.Controversy)) {
 							$("#Controversy").addClass("minus-big");
 						} else {
 							$("#Controversy").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Loyalty['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Loyalty['@attributes'].Value) {
-						$("#Loyalty").val($("#Loyalty").val() + " -> " + personality.Loyalty['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Loyalty['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Loyalty['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Loyalty != afPlayer.PersonalityAttributes.Loyalty) {
+						$("#Loyalty").val($("#Loyalty").val() + " -> " + personality.Loyalty);
+						if(Number(bfPlayer.PersonalityAttributes.Loyalty) > Number(afPlayer.PersonalityAttributes.Loyalty)) {
 							$("#Loyalty").addClass("minus-big");
 						} else {
 							$("#Loyalty").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Pressure['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Pressure['@attributes'].Value) {
-						$("#Pressure").val($("#Pressure").val() + " -> " + personality.Pressure['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Pressure['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Pressure['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Pressure != afPlayer.PersonalityAttributes.Pressure) {
+						$("#Pressure").val($("#Pressure").val() + " -> " + personality.Pressure);
+						if(Number(bfPlayer.PersonalityAttributes.Pressure) > Number(afPlayer.PersonalityAttributes.Pressure)) {
 							$("#Pressure").addClass("minus-big");
 						} else {
 							$("#Pressure").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Professional['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Professional['@attributes'].Value) {
-						$("#Professional").val($("#Professional").val() + " -> " + personality.Professional['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Professional['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Professional['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Professional != afPlayer.PersonalityAttributes.Professional) {
+						$("#Professional").val($("#Professional").val() + " -> " + personality.Professional);
+						if(Number(bfPlayer.PersonalityAttributes.Professional) > Number(afPlayer.PersonalityAttributes.Professional)) {
 							$("#Professional").addClass("minus-big");
 						} else {
 							$("#Professional").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Sportsmanship['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Sportsmanship['@attributes'].Value) {
-						$("#Sportsmanship").val($("#Sportsmanship").val() + " -> " + personality.Sportsmanship['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Sportsmanship['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Sportsmanship['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Sportsmanship != afPlayer.PersonalityAttributes.Sportsmanship) {
+						$("#Sportsmanship").val($("#Sportsmanship").val() + " -> " + personality.Sportsmanship);
+						if(Number(bfPlayer.PersonalityAttributes.Sportsmanship) > Number(afPlayer.PersonalityAttributes.Sportsmanship)) {
 							$("#Sportsmanship").addClass("minus-big");
 						} else {
 							$("#Sportsmanship").addClass("plus-big");
 						}
 					}
-					if(bfPlayer.Attributes.PersonalityAttributes.Temperament['@attributes'].Value != afPlayer.Attributes.PersonalityAttributes.Temperament['@attributes'].Value) {
-						$("#Temperament").val($("#Temperament").val() + " -> " + personality.Temperament['@attributes'].Value);
-						if(Number(bfPlayer.Attributes.PersonalityAttributes.Temperament['@attributes'].Value) > Number(afPlayer.Attributes.PersonalityAttributes.Temperament['@attributes'].Value)) {
+					if(bfPlayer.PersonalityAttributes.Temperament != afPlayer.PersonalityAttributes.Temperament) {
+						$("#Temperament").val($("#Temperament").val() + " -> " + personality.Temperament);
+						if(Number(bfPlayer.PersonalityAttributes.Temperament) > Number(afPlayer.PersonalityAttributes.Temperament)) {
 							$("#Temperament").addClass("minus-big");
 						} else {
 							$("#Temperament").addClass("plus-big");
 						}
 					}
 					
-					if(bfPlayer.General.CA['@attributes'].Value != afPlayer.General.CA['@attributes'].Value) {
-						if(bfPlayer.General.CA['@attributes'].Value > afPlayer.General.CA['@attributes'].Value) {
+					if(bfPlayer.CA != afPlayer.CA) {
+						if(bfPlayer.CA > afPlayer.CA) {
 							$("#CA").addClass("minus-big");
+                            $("#CA").css("color", "red").css("font-weight", "bold").css("font-size", "20");
 						} else {
 							$("#CA").addClass("plus-big");
+                            $("#CA").css("color", "blue").css("font-weight", "bold").css("font-size", "20");
 						}
 						if(changeCount > 0) {
 							changeText += ", ";
@@ -408,95 +370,95 @@
 						$("#CA").val($("#CA").val() + " -> " + currentAbility);
 					}
 					
-					if(player.Positions.AttackingMidCentral['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidCentral > 15) {
 						Position += "AMC";
 						PositionCount++;
 					}
-					if(player.Positions.AttackingMidLeft['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "AML	";
 						PositionCount++;
 					}
-					if(player.Positions.AttackingMidRight['@attributes'].Value > 15) {
+					if(player.Positions.AttackingMidRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "AMR";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderCentral['@attributes'].Value > 15) {
+					if(player.Positions.DefenderCentral > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DC";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderLeft['@attributes'].Value > 15) {
+					if(player.Positions.DefenderLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DL";
 						PositionCount++;
 					}
-					if(player.Positions.DefenderRight['@attributes'].Value > 15) {
+					if(player.Positions.DefenderRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DR";
 						PositionCount++;
 					}
-					if(player.Positions.DefensiveMidfielder['@attributes'].Value > 15) {
+					if(player.Positions.DefensiveMidfielder > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "DM";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderCentral['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderCentral > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "MC";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderLeft['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "ML";
 						PositionCount++;
 					}
-					if(player.Positions.MidfielderRight['@attributes'].Value > 15) {
+					if(player.Positions.MidfielderRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "MR";
 						PositionCount++;
 					}
-					if(player.Positions.WingBackLeft['@attributes'].Value > 15) {
+					if(player.Positions.WingBackLeft > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "WBL";
 						PositionCount++;
 					}
-					if(player.Positions.WingBackRight['@attributes'].Value > 15) {
+					if(player.Positions.WingBackRight > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "WBR";
 						PositionCount++;
 					}
-					if(player.Positions.Striker['@attributes'].Value > 15) {
+					if(player.Positions.Striker > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
 						Position += "ST";
 						PositionCount++;
 					}
-					if(player.Positions.Goalkeeper['@attributes'].Value > 15) {
+					if(player.Positions.Goalkeeper > 15) {
 						if(PositionCount > 0) {
 							Position += ",";
 						}
@@ -522,8 +484,8 @@
 					}
 									
 					// 멘탈					
-					if(bfPlayer.Attributes.MentalAttributes.Aggression['@attributes'].Value != mental.Aggression['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Aggression['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Aggression['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Aggression != mental.Aggression) {
+						if(Number(bfPlayer.MentalAttributes.Aggression) > Number(afPlayer.MentalAttributes.Aggression)) {
 							$("#Aggression").addClass("minus-sm");
 						} else {
 							$("#Aggression").addClass("plus-sm");
@@ -534,10 +496,10 @@
 						changeText += "적극성";
 						changeCount++;
 						
-						$("#Aggression").val($("#Aggression").val() + " -> " + mental.Aggression['@attributes'].Value);
+						$("#Aggression").val($("#Aggression").val() + " -> " + mental.Aggression);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Anticipation['@attributes'].Value != mental.Anticipation['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Anticipation['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Anticipation['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Anticipation != mental.Anticipation) {
+						if(Number(bfPlayer.MentalAttributes.Anticipation) > Number(afPlayer.MentalAttributes.Anticipation)) {
 							$("#Anticipation").addClass("minus-sm");
 						} else {
 							$("#Anticipation").addClass("plus-sm");
@@ -548,10 +510,10 @@
 						changeText += "예측력";
 						changeCount++;
 							
-						$("#Anticipation").val($("#Anticipation").val() + " -> " + mental.Anticipation['@attributes'].Value);
+						$("#Anticipation").val($("#Anticipation").val() + " -> " + mental.Anticipation);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Bravery['@attributes'].Value != mental.Bravery['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Bravery['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Bravery['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Bravery != mental.Bravery) {
+						if(Number(bfPlayer.MentalAttributes.Bravery) > Number(afPlayer.MentalAttributes.Bravery)) {
 							$("#Bravery").addClass("minus-sm");
 						} else {
 							$("#Bravery").addClass("plus-sm");
@@ -562,11 +524,11 @@
 						changeText += "대담성";
 						changeCount++;
 						
-						$("#Bravery").val($("#Bravery").val() + " -> " + mental.Bravery['@attributes'].Value);
+						$("#Bravery").val($("#Bravery").val() + " -> " + mental.Bravery);
 						
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Composure['@attributes'].Value != mental.Composure['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Composure['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Composure['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Composure != mental.Composure) {
+						if(Number(bfPlayer.MentalAttributes.Composure) > Number(afPlayer.MentalAttributes.Composure)) {
 							$("#Composure").addClass("minus-sm");
 						} else {
 							$("#Composure").addClass("plus-sm");
@@ -576,11 +538,11 @@
 						}
 						changeText += "침착성";
 						changeCount++;
-						$("#Composure").val($("#Composure").val() + " -> " + mental.Composure['@attributes'].Value);
+						$("#Composure").val($("#Composure").val() + " -> " + mental.Composure);
 						
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Concentration['@attributes'].Value != mental.Concentration['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Concentration['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Concentration['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Concentration != mental.Concentration) {
+						if(Number(bfPlayer.MentalAttributes.Concentration) > Number(afPlayer.MentalAttributes.Concentration)) {
 							$("#Concentration").addClass("minus-sm");
 						} else {
 							$("#Concentration").addClass("plus-sm");
@@ -590,10 +552,10 @@
 						}
 						changeText += "집중력";
 						changeCount++;
-						$("#Concentration").val($("#Concentration").val() + " -> " + mental.Concentration['@attributes'].Value);
+						$("#Concentration").val($("#Concentration").val() + " -> " + mental.Concentration);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Decisions['@attributes'].Value != mental.Decisions['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Decisions['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Decisions['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Decisions != mental.Decisions) {
+						if(Number(bfPlayer.MentalAttributes.Decisions) > Number(afPlayer.MentalAttributes.Decisions)) {
 							$("#Decisions").addClass("minus-sm");
 						} else {
 							$("#Decisions").addClass("plus-sm");
@@ -604,10 +566,10 @@
 						changeText += "판단력";
 						changeCount++;
 						
-						$("#Decisions").val($("#Decisions").val() + " -> " + mental.Decisions['@attributes'].Value);
+						$("#Decisions").val($("#Decisions").val() + " -> " + mental.Decisions);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Determination['@attributes'].Value != mental.Determination['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Determination['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Determination['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Determination != mental.Determination) {
+						if(Number(bfPlayer.MentalAttributes.Determination) > Number(afPlayer.MentalAttributes.Determination)) {
 							$("#Determination").addClass("minus-sm");
 						} else {
 							$("#Determination").addClass("plus-sm");
@@ -617,10 +579,10 @@
 						}
 						changeText += "승부욕";
 						changeCount++;
-						$("#Determination").val($("#Determination").val() + " -> " + mental.Determination['@attributes'].Value);
+						$("#Determination").val($("#Determination").val() + " -> " + mental.Determination);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Flair['@attributes'].Value != mental.Flair['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Flair['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Flair['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Flair != mental.Flair) {
+						if(Number(bfPlayer.MentalAttributes.Flair) > Number(afPlayer.MentalAttributes.Flair)) {
 							$("#Flair").addClass("minus-sm");
 						} else {
 							$("#Flair").addClass("plus-sm");
@@ -630,10 +592,10 @@
 						}
 						changeText += "천재성";
 						changeCount++;
-						$("#Flair").val($("#Flair").val() + " -> " + mental.Flair['@attributes'].Value);
+						$("#Flair").val($("#Flair").val() + " -> " + mental.Flair);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Leadership['@attributes'].Value != mental.Leadership['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Leadership['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Leadership['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Leadership != mental.Leadership) {
+						if(Number(bfPlayer.MentalAttributes.Leadership) > Number(afPlayer.MentalAttributes.Leadership)) {
 							$("#Leadership").addClass("minus-sm");
 						} else {
 							$("#Leadership").addClass("plus-sm");
@@ -643,10 +605,10 @@
 						}
 						changeText += "리더십";
 						changeCount++;
-						$("#Leadership").val($("#Leadership").val() + " -> " + mental.Leadership['@attributes'].Value);
+						$("#Leadership").val($("#Leadership").val() + " -> " + mental.Leadership);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.OffTheBall['@attributes'].Value != mental.OffTheBall['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.OffTheBall['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.OffTheBall['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.OffTheBall != mental.OffTheBall) {
+						if(Number(bfPlayer.MentalAttributes.OffTheBall) > Number(afPlayer.MentalAttributes.OffTheBall)) {
 							$("#OffTheBall").addClass("minus-sm");
 						} else {
 							$("#OffTheBall").addClass("plus-sm");
@@ -656,10 +618,10 @@
 						}
 						changeText += "오프 더 볼";
 						changeCount++;
-						$("#OffTheBall").val($("#OffTheBall").val() + " -> " + mental.OffTheBall['@attributes'].Value);
+						$("#OffTheBall").val($("#OffTheBall").val() + " -> " + mental.OffTheBall);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Positioning['@attributes'].Value != mental.Positioning['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Positioning['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Positioning['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Positioning != mental.Positioning) {
+						if(Number(bfPlayer.MentalAttributes.Positioning) > Number(afPlayer.MentalAttributes.Positioning)) {
 							$("#Positioning").addClass("minus-sm");
 						} else {
 							$("#Positioning").addClass("plus-sm");
@@ -669,10 +631,10 @@
 						}
 						changeText += "위치 선정";
 						changeCount++;
-						$("#Positioning").val($("#Positioning").val() + " -> " + mental.Positioning['@attributes'].Value);
+						$("#Positioning").val($("#Positioning").val() + " -> " + mental.Positioning);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Teamwork['@attributes'].Value != mental.Teamwork['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Teamwork['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Teamwork['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Teamwork != mental.Teamwork) {
+						if(Number(bfPlayer.MentalAttributes.Teamwork) > Number(afPlayer.MentalAttributes.Teamwork)) {
 							$("#Teamwork").addClass("minus-sm");
 						} else {
 							$("#Teamwork").addClass("plus-sm");
@@ -682,10 +644,10 @@
 						}
 						changeText += "팀워크";
 						changeCount++;
-						$("#Teamwork").val($("#Teamwork").val() + " -> " + mental.Teamwork['@attributes'].Value);
+						$("#Teamwork").val($("#Teamwork").val() + " -> " + mental.Teamwork);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Vision['@attributes'].Value != mental.Vision['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Vision['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Vision['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Vision != mental.Vision) {
+						if(Number(bfPlayer.MentalAttributes.Vision) > Number(afPlayer.MentalAttributes.Vision)) {
 							$("#Vision").addClass("minus-sm");
 						} else {
 							$("#Vision").addClass("plus-sm");
@@ -695,10 +657,10 @@
 						}
 						changeText += "시야";
 						changeCount++;
-						$("#Vision").val($("#Vision").val() + " -> " + mental.Vision['@attributes'].Value);
+						$("#Vision").val($("#Vision").val() + " -> " + mental.Vision);
 					}
-					if(bfPlayer.Attributes.MentalAttributes.Workrate['@attributes'].Value != mental.Workrate['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.MentalAttributes.Workrate['@attributes'].Value) > Number(afPlayer.Attributes.MentalAttributes.Workrate['@attributes'].Value)) {
+					if(bfPlayer.MentalAttributes.Workrate != mental.Workrate) {
+						if(Number(bfPlayer.MentalAttributes.Workrate) > Number(afPlayer.MentalAttributes.Workrate)) {
 							$("#Workrate").addClass("minus-sm");
 						} else {
 							$("#Workrate").addClass("plus-sm");
@@ -708,12 +670,12 @@
 						}
 						changeText += "활동량";
 						changeCount++;
-						$("#Workrate").val($("#Workrate").val() + " -> " + mental.Workrate['@attributes'].Value);
+						$("#Workrate").val($("#Workrate").val() + " -> " + mental.Workrate);
 					}
 					
 					// 기술
-					if(bfPlayer.Attributes.TechnicalAttributes.Corners['@attributes'].Value != technical.Corners['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Corners['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Corners['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Corners != technical.Corners) {
+						if(Number(bfPlayer.TechnicalAttributes.Corners) > Number(afPlayer.TechnicalAttributes.Corners)) {
 							$("#Corners").addClass("minus-sm");
 						} else {
 							$("#Corners").addClass("plus-sm");
@@ -723,10 +685,10 @@
 						}
 						changeText += "코너킥";
 						changeCount++;
-						$("#Corners").val($("#Corners").val() + " -> " + technical.Corners['@attributes'].Value);
+						$("#Corners").val($("#Corners").val() + " -> " + technical.Corners);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Crossing['@attributes'].Value != technical.Crossing['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Crossing['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Crossing['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Crossing != technical.Crossing) {
+						if(Number(bfPlayer.TechnicalAttributes.Crossing) > Number(afPlayer.TechnicalAttributes.Crossing)) {
 							$("#Crossing").addClass("minus-sm");
 						} else {
 							$("#Crossing").addClass("plus-sm");
@@ -736,10 +698,10 @@
 						}
 						changeText += "크로스";
 						changeCount++;
-						$("#Crossing").val($("#Crossing").val() + " -> " + technical.Crossing['@attributes'].Value);
+						$("#Crossing").val($("#Crossing").val() + " -> " + technical.Crossing);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Dribbling['@attributes'].Value != technical.Dribbling['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Dribbling['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Dribbling['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Dribbling != technical.Dribbling) {
+						if(Number(bfPlayer.TechnicalAttributes.Dribbling) > Number(afPlayer.TechnicalAttributes.Dribbling)) {
 							$("#Dribbling").addClass("minus-sm");
 						} else {
 							$("#Dribbling").addClass("plus-sm");
@@ -749,10 +711,10 @@
 						}
 						changeText += "드리블";
 						changeCount++;
-						$("#Dribbling").val($("#Dribbling").val() + " -> " + technical.Dribbling['@attributes'].Value);
+						$("#Dribbling").val($("#Dribbling").val() + " -> " + technical.Dribbling);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Finishing['@attributes'].Value != technical.Finishing['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Finishing['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Finishing['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Finishing != technical.Finishing) {
+						if(Number(bfPlayer.TechnicalAttributes.Finishing) > Number(afPlayer.TechnicalAttributes.Finishing)) {
 							$("#Finishing").addClass("minus-sm");
 						} else {
 							$("#Finishing").addClass("plus-sm");
@@ -762,10 +724,10 @@
 						}
 						changeText += "골 결정력";
 						changeCount++;
-						$("#Finishing").val($("#Finishing").val() + " -> " + technical.Finishing['@attributes'].Value);
+						$("#Finishing").val($("#Finishing").val() + " -> " + technical.Finishing);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.FirstTouch['@attributes'].Value != technical.FirstTouch['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.FirstTouch['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.FirstTouch['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.FirstTouch != technical.FirstTouch) {
+						if(Number(bfPlayer.TechnicalAttributes.FirstTouch) > Number(afPlayer.TechnicalAttributes.FirstTouch)) {
 							$("#FirstTouch").addClass("minus-sm");
 						} else {
 							$("#FirstTouch").addClass("plus-sm");
@@ -775,10 +737,10 @@
 						}
 						changeText += "퍼스트 터치";
 						changeCount++;
-						$("#FirstTouch").val($("#FirstTouch").val() + " -> " + technical.FirstTouch['@attributes'].Value);
+						$("#FirstTouch").val($("#FirstTouch").val() + " -> " + technical.FirstTouch);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Freekicks['@attributes'].Value != technical.Freekicks['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Freekicks['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Freekicks['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Freekicks != technical.Freekicks) {
+						if(Number(bfPlayer.TechnicalAttributes.Freekicks) > Number(afPlayer.TechnicalAttributes.Freekicks)) {
 							$("#Freekicks").addClass("minus-sm");
 						} else {
 							$("#Freekicks").addClass("plus-sm");
@@ -788,10 +750,10 @@
 						}
 						changeText += "프리킥";
 						changeCount++;
-						$("#Freekicks").val($("#Freekicks").val() + " -> " + technical.Freekicks['@attributes'].Value);
+						$("#Freekicks").val($("#Freekicks").val() + " -> " + technical.Freekicks);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Heading['@attributes'].Value != technical.Heading['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Heading['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Heading['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Heading != technical.Heading) {
+						if(Number(bfPlayer.TechnicalAttributes.Heading) > Number(afPlayer.TechnicalAttributes.Heading)) {
 							$("#Heading").addClass("minus-sm");
 						} else {
 							$("#Heading").addClass("plus-sm");
@@ -801,10 +763,10 @@
 						}
 						changeText += "헤더";
 						changeCount++;
-						$("#Heading").val($("#Heading").val() + " -> " + technical.Heading['@attributes'].Value);
+						$("#Heading").val($("#Heading").val() + " -> " + technical.Heading);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.LongShots['@attributes'].Value != technical.LongShots['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.LongShots['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.LongShots['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.LongShots != technical.LongShots) {
+						if(Number(bfPlayer.TechnicalAttributes.LongShots) > Number(afPlayer.TechnicalAttributes.LongShots)) {
 							$("#LongShots").addClass("minus-sm");
 						} else {
 							$("#LongShots").addClass("plus-sm");
@@ -814,10 +776,10 @@
 						}
 						changeText += "중거리 슛";
 						changeCount++;
-						$("#LongShots").val($("#LongShots").val() + " -> " + technical.LongShots['@attributes'].Value);
+						$("#LongShots").val($("#LongShots").val() + " -> " + technical.LongShots);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Longthrows['@attributes'].Value != technical.Longthrows['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Longthrows['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Longthrows['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Longthrows != technical.Longthrows) {
+						if(Number(bfPlayer.TechnicalAttributes.Longthrows) > Number(afPlayer.TechnicalAttributes.Longthrows)) {
 							$("#Longthrows").addClass("minus-sm");
 						} else {
 							$("#Longthrows").addClass("plus-sm");
@@ -827,10 +789,10 @@
 						}
 						changeText += "장거리 스로인";
 						changeCount++;
-						$("#Longthrows").val($("#Longthrows").val() + " -> " + technical.Longthrows['@attributes'].Value);
+						$("#Longthrows").val($("#Longthrows").val() + " -> " + technical.Longthrows);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Marking['@attributes'].Value != technical.Marking['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Marking['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Marking['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Marking != technical.Marking) {
+						if(Number(bfPlayer.TechnicalAttributes.Marking) > Number(afPlayer.TechnicalAttributes.Marking)) {
 							$("#Marking").addClass("minus-sm");
 						} else {
 							$("#Marking").addClass("plus-sm");
@@ -840,10 +802,10 @@
 						}
 						changeText += "일대일마크";
 						changeCount++;
-						$("#Marking").val($("#Marking").val() + " -> " + technical.Marking['@attributes'].Value);
+						$("#Marking").val($("#Marking").val() + " -> " + technical.Marking);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Passing['@attributes'].Value != technical.Passing['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Passing['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Passing['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Passing != technical.Passing) {
+						if(Number(bfPlayer.TechnicalAttributes.Passing) > Number(afPlayer.TechnicalAttributes.Passing)) {
 							$("#Passing").addClass("minus-sm");
 						} else {
 							$("#Passing").addClass("plus-sm");
@@ -853,10 +815,10 @@
 						}
 						changeText += "패스";
 						changeCount++;
-						$("#Passing").val($("#Passing").val() + " -> " + technical.Passing['@attributes'].Value);
+						$("#Passing").val($("#Passing").val() + " -> " + technical.Passing);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.PenaltyTaking['@attributes'].Value != technical.PenaltyTaking['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.PenaltyTaking['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.PenaltyTaking['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.PenaltyTaking != technical.PenaltyTaking) {
+						if(Number(bfPlayer.TechnicalAttributes.PenaltyTaking) > Number(afPlayer.TechnicalAttributes.PenaltyTaking)) {
 							$("#PenaltyTaking").addClass("minus-sm");
 						} else {
 							$("#PenaltyTaking").addClass("plus-sm");
@@ -866,10 +828,10 @@
 						}
 						changeText += "페널티킥";
 						changeCount++;
-						$("#PenaltyTaking").val($("#PenaltyTaking").val() + " -> " + technical.PenaltyTaking['@attributes'].Value);
+						$("#PenaltyTaking").val($("#PenaltyTaking").val() + " -> " + technical.PenaltyTaking);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Tackling['@attributes'].Value != technical.Tackling['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Tackling['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Tackling['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Tackling != technical.Tackling) {
+						if(Number(bfPlayer.TechnicalAttributes.Tackling) > Number(afPlayer.TechnicalAttributes.Tackling)) {
 							$("#Tackling").addClass("minus-sm");
 						} else {
 							$("#Tackling").addClass("plus-sm");
@@ -879,10 +841,10 @@
 						}
 						changeText += "태클";
 						changeCount++;
-						$("#Tackling").val($("#Tackling").val() + " -> " + technical.Tackling['@attributes'].Value);
+						$("#Tackling").val($("#Tackling").val() + " -> " + technical.Tackling);
 					}
-					if(bfPlayer.Attributes.TechnicalAttributes.Technique['@attributes'].Value != technical.Technique['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.TechnicalAttributes.Technique['@attributes'].Value) > Number(afPlayer.Attributes.TechnicalAttributes.Technique['@attributes'].Value)) {
+					if(bfPlayer.TechnicalAttributes.Technique != technical.Technique) {
+						if(Number(bfPlayer.TechnicalAttributes.Technique) > Number(afPlayer.TechnicalAttributes.Technique)) {
 							$("#Technique").addClass("minus-sm");
 						} else {
 							$("#Technique").addClass("plus-sm");
@@ -892,12 +854,12 @@
 						}
 						changeText += "개인기";
 						changeCount++;
-						$("#Technique").val($("#Technique").val() + " -> " + technical.Technique['@attributes'].Value);
+						$("#Technique").val($("#Technique").val() + " -> " + technical.Technique);
 					}
 					
 					// 피지컬					
-					if(bfPlayer.Attributes.PhysicalAttributes.Acceleration['@attributes'].Value != physical.Acceleration['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Acceleration['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Acceleration['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Acceleration != physical.Acceleration) {
+						if(Number(bfPlayer.PhysicalAttributes.Acceleration) > Number(afPlayer.PhysicalAttributes.Acceleration)) {
 							$("#Acceleration").addClass("minus-sm");
 						} else {
 							$("#Acceleration").addClass("plus-sm");
@@ -907,10 +869,10 @@
 						}
 						changeText += "가속도";
 						changeCount++;
-						$("#Acceleration").val($("#Acceleration").val() + " -> " + physical.Acceleration['@attributes'].Value);
+						$("#Acceleration").val($("#Acceleration").val() + " -> " + physical.Acceleration);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Agility['@attributes'].Value != physical.Agility['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Agility['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Agility['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Agility != physical.Agility) {
+						if(Number(bfPlayer.PhysicalAttributes.Agility) > Number(afPlayer.PhysicalAttributes.Agility)) {
 							$("#Agility").addClass("minus-sm");
 						} else {
 							$("#Agility").addClass("plus-sm");
@@ -920,10 +882,10 @@
 						}
 						changeText += "민첩성";
 						changeCount++;
-						$("#Agility").val($("#Agility").val() + " -> " + physical.Agility['@attributes'].Value);
+						$("#Agility").val($("#Agility").val() + " -> " + physical.Agility);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Balance['@attributes'].Value != physical.Balance['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Balance['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Balance['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Balance != physical.Balance) {
+						if(Number(bfPlayer.PhysicalAttributes.Balance) > Number(afPlayer.PhysicalAttributes.Balance)) {
 							$("#Balance").addClass("minus-sm");
 						} else {
 							$("#Balance").addClass("plus-sm");
@@ -933,10 +895,10 @@
 						}
 						changeText += "균형감각";
 						changeCount++;
-						$("#Balance").val($("#Balance").val() + " -> " + physical.Balance['@attributes'].Value);
+						$("#Balance").val($("#Balance").val() + " -> " + physical.Balance);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Jumping['@attributes'].Value != physical.Jumping['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Jumping['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Jumping['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Jumping != physical.Jumping) {
+						if(Number(bfPlayer.PhysicalAttributes.Jumping) > Number(afPlayer.PhysicalAttributes.Jumping)) {
 							$("#Jumping").addClass("minus-sm");
 						} else {
 							$("#Jumping").addClass("plus-sm");
@@ -946,10 +908,10 @@
 						}
 						changeText += "점프거리";
 						changeCount++;
-						$("#Jumping").val($("#Jumping").val() + " -> " + physical.Jumping['@attributes'].Value);
+						$("#Jumping").val($("#Jumping").val() + " -> " + physical.Jumping);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.NaturalFitness['@attributes'].Value != physical.NaturalFitness['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.NaturalFitness['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.NaturalFitness['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.NaturalFitness != physical.NaturalFitness) {
+						if(Number(bfPlayer.PhysicalAttributes.NaturalFitness) > Number(afPlayer.PhysicalAttributes.NaturalFitness)) {
 							$("#NaturalFitness").addClass("minus-sm");
 						} else {
 							$("#NaturalFitness").addClass("plus-sm");
@@ -959,10 +921,10 @@
 						}
 						changeText += "타고난 체력";
 						changeCount++;
-						$("#NaturalFitness").val($("#NaturalFitness").val() + " -> " + physical.NaturalFitness['@attributes'].Value);
+						$("#NaturalFitness").val($("#NaturalFitness").val() + " -> " + physical.NaturalFitness);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Pace['@attributes'].Value != physical.Pace['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Pace['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Pace['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Pace != physical.Pace) {
+						if(Number(bfPlayer.PhysicalAttributes.Pace) > Number(afPlayer.PhysicalAttributes.Pace)) {
 							$("#Pace").addClass("minus-sm");
 						} else {
 							$("#Pace").addClass("plus-sm");
@@ -972,10 +934,10 @@
 						}
 						changeText += "주력";
 						changeCount++;
-						$("#Pace").val($("#Pace").val() + " -> " + physical.Pace['@attributes'].Value);
+						$("#Pace").val($("#Pace").val() + " -> " + physical.Pace);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Stamina['@attributes'].Value != physical.Stamina['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Stamina['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Stamina['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Stamina != physical.Stamina) {
+						if(Number(bfPlayer.PhysicalAttributes.Stamina) > Number(afPlayer.PhysicalAttributes.Stamina)) {
 							$("#Stamina").addClass("minus-sm");
 						} else {
 							$("#Stamina").addClass("plus-sm");
@@ -985,10 +947,10 @@
 						}
 						changeText += "지구력";
 						changeCount++;
-						$("#Stamina").val($("#Stamina").val() + " -> " + physical.Stamina['@attributes'].Value);
+						$("#Stamina").val($("#Stamina").val() + " -> " + physical.Stamina);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.Strength['@attributes'].Value != physical.Strength['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.Strength['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.Strength['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.Strength != physical.Strength) {
+						if(Number(bfPlayer.PhysicalAttributes.Strength) > Number(afPlayer.PhysicalAttributes.Strength)) {
 							$("#Strength").addClass("minus-sm");
 						} else {
 							$("#Strength").addClass("plus-sm");
@@ -998,10 +960,10 @@
 						}
 						changeText += "몸싸움";
 						changeCount++;
-						$("#Strength").val($("#Strength").val() + " -> " + physical.Strength['@attributes'].Value);
+						$("#Strength").val($("#Strength").val() + " -> " + physical.Strength);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.LeftFoot['@attributes'].Value != physical.LeftFoot['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.LeftFoot['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.LeftFoot['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.LeftFoot != physical.LeftFoot) {
+						if(Number(bfPlayer.PhysicalAttributes.LeftFoot) > Number(afPlayer.PhysicalAttributes.LeftFoot)) {
 							$("#LeftFoot").addClass("minus-sm");
 						} else {
 							$("#LeftFoot").addClass("plus-sm");
@@ -1011,10 +973,10 @@
 						}
 						changeText += "왼발";
 						changeCount++;
-						$("#LeftFoot").val($("#LeftFoot").val() + " -> " + physical.LeftFoot['@attributes'].Value);
+						$("#LeftFoot").val($("#LeftFoot").val() + " -> " + physical.LeftFoot);
 					}
-					if(bfPlayer.Attributes.PhysicalAttributes.RightFoot['@attributes'].Value != physical.RightFoot['@attributes'].Value) {
-						if(Number(bfPlayer.Attributes.PhysicalAttributes.RightFoot['@attributes'].Value) > Number(afPlayer.Attributes.PhysicalAttributes.RightFoot['@attributes'].Value)) {
+					if(bfPlayer.PhysicalAttributes.RightFoot != physical.RightFoot) {
+						if(Number(bfPlayer.PhysicalAttributes.RightFoot) > Number(afPlayer.PhysicalAttributes.RightFoot)) {
 							$("#RightFoot").addClass("minus-sm");
 						} else {
 							$("#RightFoot").addClass("plus-sm");
@@ -1024,7 +986,7 @@
 						}
 						changeText += "오른발";
 						changeCount++;
-						$("#RightFoot").val($("#RightFoot").val() + " -> " + physical.RightFoot['@attributes'].Value);
+						$("#RightFoot").val($("#RightFoot").val() + " -> " + physical.RightFoot);
 					}
 					
 					$("#ApplicationText").val(changeText);
@@ -1100,13 +1062,13 @@
 			<tr>
 				<th style="text-align:center; font-size:20px;">적용 전 불러오기</th>
 				<td>
-					<input type='file' accept='xml' onchange='openFile(event,"bf")'>
+					<input type='file' accept='json' onchange='openFile(event,"bf")'>
 				</td>			
 			</tr>
 			<tr>
 				<th style="text-align:center; font-size:20px;">적용 후 불러오기</th>
 				<td>
-					<input type='file' accept='xml' onchange='openFile(event,"af")'>
+					<input type='file' accept='json' onchange='openFile(event,"af")'>
 				</td>			
 			</tr>
         </table>
@@ -1118,7 +1080,7 @@
 			<span class="input-group-text" id="basic-addon1">포지션</span>
 			<input type="text" id="Position" class="form-control" aria-label="Username" aria-describedby="basic-addon1" disabled>
 			<span class="input-group-text" id="basic-addon1">CA</span>
-			<input type="text" id="CA" class="form-control" aria-label="Username" aria-describedby="basic-addon1" disabled>
+			<input type="text" id="CA" name="CA" class="form-control" aria-label="Username" aria-describedby="basic-addon1" disabled>
 		</div>
 		<table class="table table-white table-striped table-hover table-bordered table-sm">
 			<tr>
