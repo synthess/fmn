@@ -9,8 +9,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
 
 	<body>
-        <label for="maximum">상점구매한도</label>
-        <input type="number" id="maximum" value="6">
+        <input type="hidden" id="maximum" value="7">
 		<button id="btnPopup" class="btn btn-primary">스탯보기</button>
 		<button id="btnStat" class="btn btn-primary">능력치탭 바로가기</button>
 		<table class="table table-dark table-striped table-hover table-bordered">
@@ -377,7 +376,7 @@
 			resultText += $("#name").val() + "\n";
 			
 			if($("#steroid").is(":checked")) {
-				resultText += "스테로이드 어빌+2 300p\n";
+				resultText += "스테로이드 어빌+3 300p\n";
 				totalPay += 300;
 			}
 			
@@ -458,7 +457,7 @@
 			}
 
 			if(totalBuyCount > $("#maximum").val()) {
-				$("#result").text("상점을 너무 많이해서 초기화 시켰음. 갯수 조절 다시 해보세요.\n상점은 총 6개 구매가 가능합니다.");
+				$("#result").text("상점을 너무 많이해서 초기화 시켰음. 갯수 조절 다시 해보세요.\n상점은 총 7개 구매가 가능합니다.");
                 countCheck = false;
 			}
 
