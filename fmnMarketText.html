@@ -250,6 +250,12 @@
                     
                     fusionUseCnt++;
                     $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
+					if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+						if(minus) {
+							minus = false;
+                            stateChange = true;
+						}
+					}
                 }
                 $("#inputText").val("");
             }
