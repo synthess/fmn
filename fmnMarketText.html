@@ -206,6 +206,9 @@
         $( "#inputText" ).on("keyup", function(e) {
             if(e.keyCode == 13) {
                 if($("#inputText").val() != null && $("#inputText").val() != "") {
+					if(fusionFinish) {
+						return;
+					}
                     if(minus) {
                         if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
                             minus = false;
@@ -217,13 +220,9 @@
                     } else if(!minus) {
                         if(stateChange) {
                             fusionUseCnt = 1;
-                            stateChange = false;
                         }
                         if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
                             fusionFinish = true;
-                            return;
-                        }
-                        if(fusionFinish) {
                             return;
                         }
 
@@ -239,12 +238,6 @@
                         } else {
                             fusionFinish = true;
                         }
-                    }
-                    if(minus && fusionFinish) {
-                        alert("마이너스 그만 입력하고 새로운 항목으로 플러스 입력하세요.");
-                        return;
-                    } else if(!minus && fusionFinish) {
-                        return;
                     }
                     var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
                     
@@ -517,5 +510,5 @@
 			   console.log(popupName);
 		   window.open(url, popupName, options);
 		}
-	</script> 
+	</script>
 </html>
