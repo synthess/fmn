@@ -157,6 +157,9 @@
 		var endorphinCount = 0;
 		var setpieceCount  = 0;
         var minus = true;
+        var fusionUseCnt = 1;
+        var fusionFinish = false;
+        var stateChange = false;
         var availableTags = [
                             "개인기",
                             "골 결정력",
@@ -202,18 +205,50 @@
 
         $( "#inputText" ).on("keyup", function(e) {
             if(e.keyCode == 13) {
-                console.log($("#inputText").val() != "");
                 if($("#inputText").val() != null && $("#inputText").val() != "") {
                     if(minus) {
+                        if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
+                            minus = false;
+                            stateChange = true;
+                            fusionUseCnt = 1;
+                        }
                         $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
-                        minus = false;
+                        fusionUseCnt++;
                     } else if(!minus) {
+                        if(stateChange) {
+                            fusionUseCnt = 1;
+                            stateChange = false;
+                        }
+                        if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+                            fusionFinish = true;
+                            return;
+                        }
+                        if(fusionFinish) {
+                            return;
+                        }
+
                         $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
-                        minus = true;
+                        fusionUseCnt++;
                     }
                 } else {
+                    if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+                        if(minus || $("#fusionDivisionText").val().indexOf("+") < 0) {
+                            minus = false;
+                            stateChange = true;
+                            return;
+                        } else {
+                            fusionFinish = true;
+                        }
+                    }
+                    if(minus && fusionFinish) {
+                        alert("마이너스 그만 입력하고 새로운 항목으로 플러스 입력하세요.");
+                        return;
+                    } else if(!minus && fusionFinish) {
+                        return;
+                    }
                     var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
                     
+                    fusionUseCnt++;
                     $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
                 }
                 $("#inputText").val("");
