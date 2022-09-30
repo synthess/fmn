@@ -205,52 +205,56 @@
 
         $( "#inputText" ).on("keyup", function(e) {
             if(e.keyCode == 13) {
-                if($("#inputText").val() != null && $("#inputText").val() != "") {
-					if(fusionFinish) {
-						return;
-					}
-                    if(minus) {
-                        if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
-                            minus = false;
-                            stateChange = true;
-                            fusionUseCnt = 1;
-                        }
-                        $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
-                        fusionUseCnt++;
-                    } else if(!minus) {
-                        if(stateChange) {
-                            fusionUseCnt = 1;
-                        }
-                        if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-                            fusionFinish = true;
-                            return;
-                        }
-
-                        $("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
-                        fusionUseCnt++;
-                    }
-                } else {
-                    if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-                        if(minus || $("#fusionDivisionText").val().indexOf("+") < 0) {
-                            minus = false;
-                            stateChange = true;
-                            return;
-                        } else {
-                            fusionFinish = true;
-                        }
-                    }
-                    var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
-                    
-                    fusionUseCnt++;
-                    $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
-					if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-						if(minus) {
-							minus = false;
-                            stateChange = true;
+		if(fusionFinish) {
+			return;
+		} else {
+			if($("#inputText").val() != null && $("#inputText").val() != "") {
+						if(fusionFinish) {
+							return;
 						}
-					}
-                }
-                $("#inputText").val("");
+			    if(minus) {
+				if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
+				    minus = false;
+				    stateChange = true;
+				    fusionUseCnt = 1;
+				}
+				$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
+				fusionUseCnt++;
+			    } else if(!minus) {
+				if(stateChange) {
+				    fusionUseCnt = 1;
+				}
+				if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+				    fusionFinish = true;
+				    return;
+				}
+
+				$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
+				fusionUseCnt++;
+			    }
+			} else {
+			    if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+				if(minus || $("#fusionDivisionText").val().indexOf("+") < 0) {
+				    minus = false;
+				    stateChange = true;
+				    return;
+				} else {
+				    fusionFinish = true;
+				}
+			    }
+			    var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
+
+			    fusionUseCnt++;
+			    $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
+						if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+							if(minus) {
+								minus = false;
+				    stateChange = true;
+							}
+						}
+			}
+			$("#inputText").val("");
+		}
             }
         });
 
