@@ -209,49 +209,54 @@
 			return;
 		} else {
 			if($("#inputText").val() != null && $("#inputText").val() != "") {
-						if(fusionFinish) {
-							return;
-						}
+				if(fusionFinish) {
+					return;
+				}
 			    if(minus) {
-				if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
-				    minus = false;
-				    stateChange = true;
-				    fusionUseCnt = 1;
-				}
-				$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
-				fusionUseCnt++;
+					if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
+						minus = false;
+						stateChange = true;
+						fusionUseCnt = 1;
+					}
+					$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
+					fusionUseCnt++;
 			    } else if(!minus) {
-				if(stateChange) {
-				    fusionUseCnt = 1;
-				}
-				if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-				    fusionFinish = true;
-				    return;
-				}
+					if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+						fusionFinish = true;
+						return;
+					}
 
-				$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
-				fusionUseCnt++;
+					$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "+1");
+					fusionUseCnt++;
 			    }
 			} else {
-			    if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-				if(minus || $("#fusionDivisionText").val().indexOf("+") < 0) {
-				    minus = false;
-				    stateChange = true;
-				    return;
-				} else {
-				    fusionFinish = true;
+				if(!minus && stateChange && fusionUseCnt == 1) {
+					alert("플러스 시킬 항목을 입력하세요.");
+					return;
 				}
+			    if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+					if(minus || $("#fusionDivisionText").val().indexOf("+") < 0) {
+						minus = false;
+						stateChange = true;
+						fusionUseCnt = 1;
+						return;
+					} else {
+						fusionFinish = true;
+					}
 			    }
 			    var lastItemNumber = Number($("#fusionDivisionText").val().slice(-1)) + 1;
 
 			    fusionUseCnt++;
 			    $("#fusionDivisionText").val($("#fusionDivisionText").val().substring(0,$("#fusionDivisionText").val().length-1) + lastItemNumber);
-						if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
-							if(minus) {
-								minus = false;
-				    stateChange = true;
-							}
-						}
+				if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+					if(minus) {
+						minus = false;
+						stateChange = true;
+						fusionUseCnt = 1;
+					} else {
+						fusionFinish = true;
+					}
+				}
 			}
 			$("#inputText").val("");
 		}
