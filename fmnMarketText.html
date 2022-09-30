@@ -216,11 +216,16 @@
 					if(fusionUseCnt >= Number($("#fusionDivisionCnt").val())) {
 						minus = false;
 						stateChange = true;
-						fusionUseCnt = 1;
 					}
 					$("#fusionDivisionText").val($("#fusionDivisionText").val() + " " + $("#inputText").val() + "-1");
 					fusionUseCnt++;
 			    } else if(!minus) {
+					if(stateChange && fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
+						fusionUseCnt = 1;
+					}
+					if(fusionUseCnt == 1) {
+						stateChange = false;
+					}
 					if(fusionUseCnt > Number($("#fusionDivisionCnt").val())) {
 						fusionFinish = true;
 						return;
@@ -516,7 +521,6 @@
 		   options += opts.top && opts.height ? ', top=' + opts.top : ', top=' + ( (screen.availHeight - opts.height) / 2);
 		   options += opts.scrollbars ? ', scrollbars=' + opts.scrollbars : ', scrollbars=no';
 		   options += opts.resizable ? ', resizable=' + opts.resizable : ', resizable=no';
-			   console.log(popupName);
 		   window.open(url, popupName, options);
 		}
 	</script>
