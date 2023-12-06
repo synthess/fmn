@@ -38,7 +38,7 @@
                     const doc = parser.parseFromString(data, 'text/html');
         
                     // CSV 데이터 추출
-                    const csvElement = doc.querySelector('YOUR_CSV_ELEMENT_SELECTOR'); // CSV 데이터가 있는 HTML 요소 선택자
+                    const csvElement = doc.querySelector('itemJson'); // CSV 데이터가 있는 HTML 요소 선택자
                     const csvData = csvElement.innerText; // 선택한 요소의 텍스트 데이터 가져오기
         
                     // 추출한 CSV 데이터 확인
