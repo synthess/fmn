@@ -31,14 +31,23 @@
             const csvUrl = 'https://drive.google.com/file/d/1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw/view?usp=drive_link'; // Google 드라이브에서 생성된 CSV 파일의 공유 링크
 
             $.ajax({
-                type: 'GET',
-                url: csvUrl,
+                url: htmlUrl,
                 success: function(data) {
-                    // 가져온 데이터를 처리하는 작업
-                    console.log(data); // 가져온 데이터 확인
+                    // HTML 파싱
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+        
+                    // CSV 데이터 추출
+                    const csvElement = doc.querySelector('YOUR_CSV_ELEMENT_SELECTOR'); // CSV 데이터가 있는 HTML 요소 선택자
+                    const csvData = csvElement.innerText; // 선택한 요소의 텍스트 데이터 가져오기
+        
+                    // 추출한 CSV 데이터 확인
+                    console.log(csvData);
+        
+                    // 여기서부터는 가져온 CSV 데이터를 원하는 형식으로 가공하거나 파싱하는 작업을 진행합니다.
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching CSV file:', status, error);
+                    console.error('Error fetching HTML file:', status, error);
                 }
             });
         });
