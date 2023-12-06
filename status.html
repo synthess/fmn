@@ -29,10 +29,10 @@
     <script type="text/javascript">
         
         $(document).ready(function() {
-            const owner = 'YOUR_USERNAME'; // GitHub 사용자명
-            const repo = 'YOUR_REPOSITORY'; // 저장소명
-            const branch = 'YOUR_BRANCH'; // 브랜치명
-            const filePath = 'path/to/your/file.csv'; // 파일 경로
+            const owner = 'synthess'; // GitHub 사용자명
+            const repo = 'fmn'; // 저장소명
+            const branch = 'blob'; // 브랜치명
+            const filePath = 'main/status.csv'; // 파일 경로
 
             fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`)
             .then(response => response.json())
