@@ -1,0 +1,62 @@
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script> <!--엑셀-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bPopup/0.11.0/jquery.bpopup.js"></script> <!--레이어팝업-->
+        <script src="https://apis.google.com/js/api.js"></script> <!-- 구글 api-->
+    </head>
+    <body>
+        <table id="status" class="table">
+            <thead>
+                <tr id="header">
+                    <th scope="col">#</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">전적</th>
+                    <th scope="col">승률</th>
+                    <th scope="col">백분위</th>
+                    <th scope="col">순위</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </body>
+    <script type="text/javascript">
+        
+        $(document).ready(function() {
+            gapi.load('client', function() {
+                // 구글 드라이브 API 초기화
+                gapi.client.init({
+                    apiKey: 'AIzaSyAovIKqLarnA__OqHEIByBuTa2vaBzSAqs', // 여기에 API 키 입력
+                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                }).then(function() {
+                    getFileFromDrive();                   
+                });
+            });
+            // CSV 파일 가져오기
+            function getFileFromDrive() {
+                gapi.client.drive.files.get({
+                    fileId: '1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw', // 가져올 파일의 ID 입력
+                    alt: 'media'
+                }).then(function(response) {
+                    // 파일을 성공적으로 가져왔을 때의 처리
+                    var csvData = response.body; // 가져온 CSV 데이터
+
+                    // CSV 데이터를 원하는 방식으로 처리
+                    console.log(csvData);
+                }, function(error) {
+                    // 파일을 가져오는 데 실패했을 때의 처리
+                    console.error('Error fetching file:', error);
+                });
+            }
+        });
+    </script>
+</html>
