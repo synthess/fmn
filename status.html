@@ -26,38 +26,19 @@
     </body>
     <script type="text/javascript">
          $(document).ready(function() {
-            const htmlUrl = 'https://drive.google.com/file/d/1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw/view?usp=drive_link'; // Google 드라이브에서 생성된 CSV 파일의 공유 링크
+            const csvUrl = 'status.csv'; // CSV 파일의 경로
 
-            $.ajax({
-                url: htmlUrl,
-                success: function(data) {
-                    console.log("data");
-                    console.log(data);
-                    // HTML 파싱
-                    const parser = new DOMParser();
-                    console.log("parser");
-                    console.log(parser);
-                    const doc = parser.parseFromString(data, 'text/html');
-                    console.log("doc");
-                    console.log(doc);
-        
-                    // CSV 데이터 추출
-                    const csvElement = doc.querySelector('table.ndfHFb-c4YZDc-hDEnYe-Df1ZY-bN97Pc'); // CSV 데이터가 있는 HTML 요소 선택자
-                    console.log("csvElement");
-                    console.log(csvElement);
-                    const csvData = csvElement.innerText; // 선택한 요소의 텍스트 데이터 가져오기
-                    console.log("csvData");
-                    console.log(csvData);
-        
-                    // 추출한 CSV 데이터 확인
-                    console.log(csvData);
-        
-                    // 여기서부터는 가져온 CSV 데이터를 원하는 형식으로 가공하거나 파싱하는 작업을 진행합니다.
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching HTML file:', status, error);
-                }
-            });
+        $.ajax({
+            type: 'GET',
+            url: csvUrl,
+            dataType: 'text',
+            success: function(csvData) {
+                // CSV 파일 읽기 성공 시 수행할 작업
+                console.log(csvData); // 읽어온 데이터 확인
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching CSV file:', status, error);
+            }
         });
     </script>
 </html>
