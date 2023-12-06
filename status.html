@@ -28,29 +28,19 @@
     </body>
     <script type="text/javascript">
           $(document).ready(function() {
-            const csvUrl = 'https://drive.google.com/file/d/1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw/view?usp=drive_link'; // 공유된 CSV 파일의 링크 입력
-        
+            const csvUrl = 'https://drive.google.com/file/d/1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw/view?usp=drive_link'; // Google 드라이브에서 생성된 CSV 파일의 공유 링크
+
             $.ajax({
-              type: 'GET',
-              url: csvUrl,
-              dataType: 'text',
-              success: function(csvData) {
-                var csvTable = $('#status');
-                var rows = csvData.split('\n');
-                rows.forEach(function(row) {
-                  var cells = row.split(',');
-                  var tableRow = '<tr>';
-                  cells.forEach(function(cell) {
-                    tableRow += '<td>' + cell + '</td>';
-                  });
-                  tableRow += '</tr>';
-                  csvTable.append(tableRow);
-                });
-              },
-              error: function(xhr, status, error) {
-                console.error('Error fetching CSV file:', status, error);
-              }
+                type: 'GET',
+                url: csvUrl,
+                success: function(data) {
+                    // 가져온 데이터를 처리하는 작업
+                    console.log(data); // 가져온 데이터 확인
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching CSV file:', status, error);
+                }
             });
-          });
+        });
     </script>
 </html>
