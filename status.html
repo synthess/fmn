@@ -36,6 +36,7 @@
               url: csvUrl,
               dataType: 'text',
               success: function(csvData) {
+                  console.log(csvData);
                 var csvTable = $('#table');
                 var rows = csvData.split('\n');
                 rows.forEach(function(row) {
