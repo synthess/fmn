@@ -33,9 +33,15 @@
             $.ajax({
                 url: htmlUrl,
                 success: function(data) {
+                    console.log("data");
+                    console.log(data);
                     // HTML 파싱
                     const parser = new DOMParser();
+                    console.log("parser");
+                    console.log(parser);
                     const doc = parser.parseFromString(data, 'text/html');
+                    console.log("doc");
+                    console.log(doc);
         
                     // CSV 데이터 추출
                     const csvElement = doc.querySelector('itemJson'); // CSV 데이터가 있는 HTML 요소 선택자
