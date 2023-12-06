@@ -31,10 +31,10 @@
         $(document).ready(function() {
             const owner = 'synthess'; // GitHub 사용자명
             const repo = 'fmn'; // 저장소명
-            const branch = 'blob'; // 브랜치명
-            const filePath = 'main/status.csv'; // 파일 경로
+            const branch = 'main'; // 브랜치명
+            const filePath = 'status.csv'; // 파일 경로
 
-            fetch(`https://api.github.com/repos/synthess/fmn/contents/main/status.csv?ref=blob`)
+            fetch('https://api.github.com/repos/synthess/fmn/contents/status.csv?ref=main')
             .then(response => response.json())
             .then(data => {
                 const content = atob(data.content); // base64로 인코딩된 파일 내용을 디코딩
