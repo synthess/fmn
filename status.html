@@ -27,8 +27,7 @@
         </table>
     </body>
     <script type="text/javascript">
-        
-        $(document).ready(function() {
+          $(document).ready(function() {
             const csvUrl = 'https://drive.google.com/file/d/1c0uJzECUbw6vLIt7nYGUXCoYgFTPABvw/view?usp=sharing'; // 공유된 CSV 파일의 링크 입력
         
             $.ajax({
@@ -36,8 +35,7 @@
               url: csvUrl,
               dataType: 'text',
               success: function(csvData) {
-                  console.log(csvData);
-                var csvTable = $('#table');
+                var csvTable = $('#csvTable');
                 var rows = csvData.split('\n');
                 rows.forEach(function(row) {
                   var cells = row.split(',');
